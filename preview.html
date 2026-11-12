@@ -1,0 +1,1885 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DARK WEB // Forgotten Protocol</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Special+Elite&display=swap');
+
+:root {
+  --bg:#050606;
+  --panel:#0b0e0e;
+  --line:#202727;
+  --green:#9affaa;
+  --red:#ff3434;
+  --muted:#62716a;
+  --white:#c8d1ca;
+}
+
+* {box-sizing:border-box}
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:'Share Tech Mono',monospace;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+body:after {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:20;
+  background:repeating-linear-gradient(
+    transparent 0px,
+    rgba(255,255,255,.018) 1px,
+    transparent 3px
+  );
+}
+
+button,input {
+  font-family:inherit;
+}
+
+button {
+  background:#111817;
+  border:1px solid #34443b;
+  color:var(--green);
+  padding:11px 15px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+button:hover {
+  background:#1a3023;
+  border-color:var(--green);
+}
+
+button:disabled {
+  opacity:.3;
+  cursor:not-allowed;
+}
+
+input {
+  background:#050808;
+  border:1px solid #35423c;
+  color:var(--green);
+  padding:12px;
+  outline:none;
+  width:100%;
+}
+
+input:focus {border-color:var(--green)}
+
+::selection {
+  background:var(--green);
+  color:black;
+}
+
+a {color:var(--green)}
+
+#login {
+  position:fixed;
+  inset:0;
+  background:radial-gradient(ellipse at center,#111b17,#030404 70%);
+  z-index:50;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.login-box {
+  width:min(460px,100%);
+  border:1px solid #34443b;
+  background:rgba(5,8,7,.97);
+  padding:35px;
+  box-shadow:0 0 70px #18352235;
+}
+
+.logo {
+  color:var(--red);
+  font-size:clamp(35px,9vw,64px);
+  letter-spacing:9px;
+  text-align:center;
+  text-shadow:0 0 20px #ff202044;
+  animation:flicker 5s infinite;
+}
+
+@keyframes flicker {
+  0%,95%,98%,100% {opacity:1}
+  96%,97% {opacity:.4}
+}
+
+.subtitle {
+  text-align:center;
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:4px;
+  margin:10px 0 35px;
+}
+
+.warning {
+  color:var(--red);
+  border:1px solid #5c2525;
+  padding:12px;
+  font-size:12px;
+  margin:20px 0;
+  line-height:1.8;
+}
+
+.full {width:100%;margin-top:12px}
+
+#app {display:none}
+
+.topbar {
+  min-height:62px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 22px;
+  gap:15px;
+  flex-wrap:wrap;
+  background:#080b0a;
+}
+
+.brand {
+  color:var(--red);
+  letter-spacing:4px;
+  font-size:19px;
+}
+
+.status {
+  color:var(--green);
+  font-size:11px;
+}
+
+.layout {
+  display:grid;
+  grid-template-columns:215px minmax(0,1fr);
+  min-height:calc(100vh - 62px);
+}
+
+.sidebar {
+  background:#080b0a;
+  border-right:1px solid var(--line);
+  padding:20px 12px;
+}
+
+.nav-title {
+  color:#52645a;
+  font-size:10px;
+  letter-spacing:3px;
+  margin:20px 10px 8px;
+}
+
+.nav {
+  display:block;
+  width:100%;
+  text-align:left;
+  margin:4px 0;
+  border-color:transparent;
+  color:#87948d;
+  background:transparent;
+  font-size:12px;
+}
+
+.nav.active {
+  color:var(--green);
+  background:#142219;
+  border-color:#263b2b;
+}
+
+.nav.locked {color:#46504a}
+
+.main {
+  padding:28px;
+  max-width:1150px;
+  width:100%;
+  margin:auto;
+}
+
+.page {display:none}
+.page.active {display:block}
+
+.page-heading {
+  color:var(--green);
+  font-size:23px;
+  letter-spacing:3px;
+  margin-bottom:7px;
+}
+
+.description {
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.8;
+  margin-bottom:25px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:13px;
+}
+
+.panel {
+  background:var(--panel);
+  border:1px solid var(--line);
+  padding:18px;
+  margin-bottom:15px;
+}
+
+.panel h3 {
+  font-size:13px;
+  font-weight:normal;
+  color:var(--green);
+  letter-spacing:2px;
+  margin:0 0 15px;
+}
+
+.big-number {
+  font-size:29px;
+  color:var(--green);
+}
+
+.small {
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.8;
+}
+
+.red {color:var(--red)}
+.green {color:var(--green)}
+
+.file {
+  border:1px solid var(--line);
+  background:#0b0e0e;
+  padding:15px;
+  cursor:pointer;
+  transition:.2s;
+  min-height:110px;
+}
+
+.file:hover {
+  border-color:var(--green);
+  transform:translateY(-2px);
+}
+
+.file h4 {
+  margin:0 0 12px;
+  font-size:13px;
+  color:var(--green);
+}
+
+.tag {
+  color:var(--red);
+  font-size:10px;
+}
+
+.record {
+  border-left:2px solid #35443b;
+  padding:8px 15px;
+  margin:15px 0;
+  font-size:12px;
+  line-height:1.9;
+  color:#aab6ad;
+}
+
+.terminal {
+  background:#020403;
+  border:1px solid #28362e;
+  padding:17px;
+  height:280px;
+  overflow:auto;
+  font-size:12px;
+  line-height:1.9;
+  color:var(--green);
+  white-space:pre-wrap;
+}
+
+.terminal-input {
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+.terminal-input input {flex:1}
+
+.chat-box {
+  background:#030505;
+  border:1px solid var(--line);
+  padding:15px;
+  height:350px;
+  overflow:auto;
+  margin-bottom:12px;
+}
+
+.message {
+  margin:12px 0;
+  font-size:12px;
+  line-height:1.8;
+}
+
+.message .sender {
+  color:var(--red);
+  display:block;
+  margin-bottom:3px;
+}
+
+.message.you .sender {color:var(--green)}
+
+.message.system .sender {color:#8b8b8b}
+
+.chat-controls {
+  display:flex;
+  gap:8px;
+}
+
+.chat-controls input {flex:1}
+
+.profile {
+  border:1px solid var(--line);
+  padding:16px;
+  background:#090c0b;
+}
+
+.avatar {
+  width:43px;
+  height:43px;
+  border:1px solid #3c4b40;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--red);
+  font-size:20px;
+  margin-bottom:12px;
+}
+
+.progress {
+  height:5px;
+  background:#202722;
+  margin-top:12px;
+}
+
+.progress div {
+  height:100%;
+  background:var(--green);
+  transition:width .4s;
+}
+
+.modal {
+  position:fixed;
+  inset:0;
+  background:#000c;
+  z-index:40;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+
+.modal-content {
+  background:#090d0b;
+  border:1px solid #48584b;
+  width:min(650px,100%);
+  max-height:85vh;
+  overflow:auto;
+  padding:25px;
+  box-shadow:0 0 60px #000;
+}
+
+.modal-content h2 {
+  color:var(--green);
+  font-size:19px;
+}
+
+.modal-content p {
+  font-size:13px;
+  line-height:2;
+  white-space:pre-wrap;
+}
+
+.close {
+  float:right;
+  color:var(--red);
+}
+
+.choice {
+  display:block;
+  width:100%;
+  text-align:left;
+  margin-top:9px;
+}
+
+.ending {
+  text-align:center;
+  padding:45px 15px;
+}
+
+.ending h1 {
+  color:var(--red);
+  font-size:clamp(25px,6vw,48px);
+  letter-spacing:5px;
+}
+
+#toast {
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#101c14;
+  color:var(--green);
+  border:1px solid #49664d;
+  padding:13px 18px;
+  z-index:100;
+  display:none;
+  font-size:12px;
+  max-width:300px;
+}
+
+.footer {
+  border-top:1px solid var(--line);
+  padding:20px;
+  color:#48534c;
+  font-size:10px;
+  text-align:center;
+}
+
+@media(max-width:700px) {
+  .layout {grid-template-columns:1fr}
+  .sidebar {
+    display:flex;
+    flex-wrap:wrap;
+    border-right:0;
+    border-bottom:1px solid var(--line);
+    padding:8px;
+    gap:4px;
+  }
+  .nav-title {display:none}
+  .nav {
+    width:auto;
+    padding:9px;
+    margin:0;
+    font-size:10px;
+  }
+  .main {padding:17px}
+  .topbar {padding:12px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN SCREEN -->
+
+<div id="login">
+  <div class="login-box">
+    <div class="logo">DARK WEB</div>
+    <div class="subtitle">THE FORGOTTEN PROTOCOL</div>
+
+    <div class="warning">
+      UNAUTHORIZED ACCESS DETECTED<br>
+      SERVER STATUS: UNSTABLE<br>
+      DATABASE: PARTIALLY CORRUPTED<br>
+      LAST ADMINISTRATOR: UNKNOWN
+    </div>
+
+    <p class="small">A connection request has been received.</p>
+    <p class="small">Choose an alias to continue.</p>
+
+    <input id="username" maxlength="20"
+      placeholder="ENTER YOUR ALIAS..." autocomplete="off">
+
+    <button class="full" onclick="login()">ESTABLISH CONNECTION →</button>
+
+    <p class="small" style="text-align:center;margin-top:20px">
+      CONNECTION IS NOT GUARANTEED TO BE SAFE.
+    </p>
+  </div>
+</div>
+
+<!-- MAIN GAME -->
+
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand">DARK WEB <span class="small">/ v0.9.7</span></div>
+    <div class="status">● CONNECTION ACTIVE</div>
+    <div class="small" id="clock">02:17:00</div>
+  </header>
+
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="nav-title">MAIN NETWORK</div>
+      <button class="nav active" onclick="showPage('home',this)">01 / Dashboard</button>
+      <button class="nav" onclick="showPage('files',this)">02 / Classified Files</button>
+      <button class="nav" onclick="showPage('users',this)">03 / Former Users</button>
+      <button class="nav" onclick="showPage('chat',this)">04 / Anonymous Chat</button>
+
+      <div class="nav-title">INVESTIGATION</div>
+      <button class="nav" onclick="showPage('terminal',this)">05 / Terminal</button>
+      <button class="nav" onclick="showPage('puzzles',this)">06 / Encryption</button>
+      <button class="nav" onclick="showPage('catalog',this)">07 / Hidden Catalog</button>
+
+      <div class="nav-title">RESTRICTED</div>
+      <button class="nav" onclick="showPage('secrets',this)">08 / Redacted Archive</button>
+      <button class="nav" onclick="showPage('ending',this)">09 / Final Protocol</button>
+
+      <div class="nav-title">PLAYER</div>
+      <div class="panel">
+        <div class="small">CURRENT ALIAS</div>
+        <div id="aliasDisplay" class="green">UNKNOWN</div>
+        <div class="small" style="margin-top:10px">DISCOVERY PROGRESS</div>
+        <div class="progress"><div id="progressBar" style="width:0%"></div></div>
+        <div id="progressText" class="small">0% COMPLETE</div>
+      </div>
+
+      <button class="nav" onclick="saveGame()">↳ SAVE PROGRESS</button>
+      <button class="nav" onclick="resetGame()">↳ RESET GAME</button>
+    </aside>
+
+    <main class="main">
+
+      <!-- DASHBOARD -->
+
+      <section class="page active" id="home">
+        <div class="page-heading">SYSTEM OVERVIEW</div>
+        <div class="description">
+          Welcome to the network. Your connection has been logged.
+          Nobody knows why the server accepted you.
+        </div>
+
+        <div class="grid">
+          <div class="panel">
+            <h3>SERVER STATUS</h3>
+            <div class="big-number green">ONLINE</div>
+            <div class="small">Location: UNKNOWN</div>
+          </div>
+          <div class="panel">
+            <h3>REGISTERED USERS</h3>
+            <div class="big-number">047</div>
+            <div class="small">Active users: 001</div>
+          </div>
+          <div class="panel">
+            <h3>UNRESOLVED CASES</h3>
+            <div class="big-number red">046</div>
+            <div class="small">No confirmed explanations</div>
+          </div>
+          <div class="panel">
+            <h3>YOUR SESSION</h3>
+            <div class="big-number" id="sessionStatus">NEW</div>
+            <div class="small">Identity: Unverified</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>INCOMING TRANSMISSION</h3>
+          <div class="record">
+            [02:17:09] UNKNOWN:<br>
+            You finally connected.
+          </div>
+          <div class="record">
+            [02:17:11] UNKNOWN:<br>
+            Don't trust the user directory.
+          </div>
+          <div class="record">
+            [02:17:15] UNKNOWN:<br>
+            And whatever you do... don't open file 019.
+          </div>
+          <button onclick="showPage('chat')">OPEN MESSAGES →</button>
+        </div>
+
+        <div class="panel">
+          <h3>RECENT SYSTEM EVENTS</h3>
+          <div id="events" class="small">
+            [SYSTEM] New connection established.<br>
+            [SYSTEM] Archive synchronization incomplete.<br>
+            [SYSTEM] One administrator is still logged in.<br>
+            [SYSTEM] Administrator status: UNKNOWN.
+          </div>
+        </div>
+      </section>
+
+      <!-- CLASSIFIED FILES -->
+
+      <section class="page" id="files">
+        <div class="page-heading">CLASSIFIED ARCHIVES</div>
+        <div class="description">
+          Internal documents. Some records have been modified or deleted.
+          Accessing restricted records may reveal additional information.
+        </div>
+        <div class="grid" id="fileGrid"></div>
+      </section>
+
+      <!-- USERS -->
+
+      <section class="page" id="users">
+        <div class="page-heading">FORMER USERS</div>
+        <div class="description">
+          47 accounts were registered. Only a selection of profiles has survived.
+        </div>
+        <div class="grid" id="userGrid"></div>
+      </section>
+
+      <!-- CHAT -->
+
+      <section class="page" id="chat">
+        <div class="page-heading">ANONYMOUS NETWORK</div>
+        <div class="description">
+          Private communication channel. Messages are simulated and stored only in this game.
+        </div>
+        <div class="panel">
+          <h3>CHANNEL: #UNKNOWN</h3>
+          <div class="chat-box" id="chatMessages">
+            <div class="message system">
+              <span class="sender">SYSTEM</span>
+              Secure channel initialized.
+            </div>
+          </div>
+          <div class="chat-controls">
+            <input id="chatInput" placeholder="Type a message..."
+              maxlength="300" onkeydown="if(event.key==='Enter')sendChat()">
+            <button onclick="sendChat()">SEND</button>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>AVAILABLE CONTACTS</h3>
+          <button onclick="contact('L')">L — UNKNOWN</button>
+          <button onclick="contact('GHOST')">GHOST — OFFLINE</button>
+          <button onclick="contact('ADMIN')">ADMIN — RESTRICTED</button>
+        </div>
+      </section>
+
+      <!-- TERMINAL -->
+
+      <section class="page" id="terminal">
+        <div class="page-heading">COMMAND TERMINAL</div>
+        <div class="description">
+          Enter commands to explore the server.
+          Type HELP for the available commands.
+        </div>
+        <div class="terminal" id="terminalOutput">
+DARK WEB OPERATING SYSTEM [VERSION 0.9.7]
+Copyright information unavailable.
+
+Initializing connection...
+Loading restricted directories...
+WARNING: 3 directories cannot be accessed.
+
+Type HELP to begin.
+        </div>
+        <div class="terminal-input">
+          <input id="commandInput" placeholder="root@darkweb:~$"
+            onkeydown="if(event.key==='Enter')runCommand()">
+          <button onclick="runCommand()">EXECUTE</button>
+        </div>
+      </section>
+
+      <!-- PUZZLES -->
+
+      <section class="page" id="puzzles">
+        <div class="page-heading">ENCRYPTION CHAMBER</div>
+        <div class="description">
+          The server protects its deepest secrets using old encryption keys.
+        </div>
+
+        <div class="panel">
+          <h3>PUZZLE 01 / THE FIRST CONNECTION</h3>
+          <p class="small">
+            "The first message arrived at the same time the server was born.
+            Four digits. Remember the dashboard."
+          </p>
+          <input id="puzzle1" placeholder="ENTER FOUR DIGITS">
+          <button onclick="solve(1)">DECRYPT</button>
+          <p id="result1" class="small"></p>
+        </div>
+
+        <div class="panel" id="puzzle2panel">
+          <h3>PUZZLE 02 / THE ABSENT USER</h3>
+          <p class="small">
+            "I exist in every record but belong to none.
+            Find the name written in the administrator's report."
+          </p>
+          <input id="puzzle2" placeholder="ENTER THE NAME">
+          <button onclick="solve(2)">DECRYPT</button>
+          <p id="result2" class="small"></p>
+        </div>
+
+        <div class="panel" id="puzzle3panel">
+          <h3>PUZZLE 03 / THE FINAL MESSAGE</h3>
+          <p class="small">
+            "A name can disappear. A number cannot.
+            The missing user is always listed last."
+          </p>
+          <input id="puzzle3" placeholder="ENTER THE CODE">
+          <button onclick="solve(3)">DECRYPT</button>
+          <p id="result3" class="small"></p>
+        </div>
+      </section>
+
+      <!-- HIDDEN CATALOG -->
+
+      <section class="page" id="catalog">
+        <div class="page-heading">HIDDEN CATALOG</div>
+        <div class="description">
+          Search the surviving index. Some entries have been deliberately concealed.
+        </div>
+        <div class="panel">
+          <h3>INDEX SEARCH</h3>
+          <input id="catalogSearch" placeholder="SEARCH DATABASE..."
+            oninput="searchCatalog()">
+        </div>
+        <div id="catalogResults" class="grid"></div>
+      </section>
+
+      <!-- SECRETS -->
+
+      <section class="page" id="secrets">
+        <div class="page-heading">REDACTED ARCHIVE</div>
+        <div class="description">
+          The following information is classified.
+        </div>
+        <div id="secretContent">
+          <div class="panel">
+            <h3>ACCESS DENIED</h3>
+            <p class="small">Complete the first two encryption puzzles to unlock this directory.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ENDINGS -->
+
+      <section class="page" id="ending">
+        <div class="page-heading">FINAL PROTOCOL</div>
+        <div class="description">
+          The server has been waiting for this decision.
+        </div>
+        <div class="panel">
+          <h3>FINAL SYSTEM MESSAGE</h3>
+          <p class="small" id="endingRequirements">
+            Three encryption keys remain. Investigate the archives and uncover the identity of the administrator.
+          </p>
+          <button onclick="finalDecision('escape')">DISCONNECT FROM THE NETWORK</button>
+          <button onclick="finalDecision('stay')">REMAIN IN THE SYSTEM</button>
+          <button onclick="finalDecision('expose')">RELEASE THE ARCHIVE</button>
+        </div>
+        <div id="endingResult"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="footer">
+    DARK WEB // THE FORGOTTEN PROTOCOL // ALL RECORDS ARE FICTIONAL<br>
+    CONNECTION LOGGED. SESSION PERSISTENCE ENABLED.
+  </div>
+</div>
+
+<!-- MODAL -->
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <button class="close" onclick="closeModal()">[ CLOSE ]</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+// ======================================
+// GAME DATA AND SAVE SYSTEM
+// ======================================
+
+const defaultState = {
+  alias:"",
+  discovered:[],
+  solved:[],
+  users:[],
+  chatCount:0,
+  contacted:[],
+  trust:0,
+  suspicion:0,
+  ending:"",
+  started:false
+};
+
+let state = {...defaultState};
+
+function loadGame() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("darkweb_save"));
+    if(saved) state = {...defaultState,...saved};
+  } catch(e) {}
+}
+
+function saveGame() {
+  localStorage.setItem("darkweb_save",JSON.stringify(state));
+  toast("SESSION SAVED.");
+}
+
+function resetGame() {
+  if(!confirm("Erase your entire investigation?")) return;
+  localStorage.removeItem("darkweb_save");
+  location.reload();
+}
+
+function login() {
+  const name = document.getElementById("username").value.trim();
+  if(!name) {
+    toast("AN ALIAS IS REQUIRED.");
+    return;
+  }
+
+  if(!state.started) {
+    state.alias = name;
+    state.started = true;
+  }
+
+  document.getElementById("login").style.display="none";
+  document.getElementById("app").style.display="block";
+  document.getElementById("aliasDisplay").textContent=state.alias;
+  document.getElementById("sessionStatus").textContent="ACTIVE";
+
+  addChat("SYSTEM","Connection established. Welcome, "+state.alias+".","system");
+  updateProgress();
+  renderFiles();
+  renderUsers();
+  updateSecrets();
+  saveGame();
+
+  if(!sessionStorage.getItem("darkweb_first")) {
+    sessionStorage.setItem("darkweb_first","yes");
+    setTimeout(()=>{
+      toast("WARNING: AN UNKNOWN USER IS VIEWING THIS SESSION.");
+    },1500);
+  }
+}
+
+loadGame();
+
+if(state.started) {
+  document.getElementById("username").value=state.alias;
+}
+
+// ======================================
+// NAVIGATION
+// ======================================
+
+function showPage(id,button) {
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
+  if(button) button.classList.add("active");
+
+  if(id==="files") renderFiles();
+  if(id==="users") renderUsers();
+  if(id==="secrets") updateSecrets();
+  if(id==="catalog") searchCatalog();
+
+  if(id==="ending") {
+    document.getElementById("endingRequirements").textContent =
+      state.solved.length+"/3 encryption keys recovered. "+
+      state.discovered.length+"/10 records investigated. "+
+      "Your trust score: "+state.trust+".";
+  }
+}
+
+// ======================================
+// ARCHIVE DATABASE
+// ======================================
+
+const files = [
+{
+ id:"001",title:"INITIAL INCIDENT REPORT",
+ type:"PUBLIC",
+ body:`INCIDENT 001
+DATE: 14/03/2024
+STATUS: UNRESOLVED
+
+At exactly 02:17 AM, an unknown server became active.
+
+No administrator had initiated the process.
+
+A single message appeared on the main terminal:
+
+"WE ARE STILL HERE."
+
+The system shut down 47 seconds later.
+
+It restarted the following night.
+
+The message was different.
+
+"WHY DID YOU LEAVE US?"`
+},
+{
+ id:"002",title:"USER DISAPPEARANCE REPORT",
+ type:"RESTRICTED",
+ body:`REPORT 002
+SUBJECT: MARA VOSS
+USER ID: 014
+
+Mara Voss logged into the network on 18/03/2024.
+
+She sent a total of 16 messages.
+
+Her last message read:
+
+"I found my own account."
+
+Her account was deleted at 02:17.
+
+No deletion command was recorded.
+
+The administrator denied accessing the file.
+
+There is no record of Mara leaving the network.`
+},
+{
+ id:"003",title:"SERVER MAINTENANCE LOG",
+ type:"PUBLIC",
+ body:`SERVER LOG
+
+01:43 - System boot
+01:58 - Administrator authenticated
+02:03 - Archive accessed
+02:17 - New user connected
+02:18 - Unknown process initiated
+02:19 - Administrator disconnected
+
+ERROR: THE ADMINISTRATOR WAS NEVER CONNECTED.
+
+The system has recorded this event 19 times.`
+},
+{
+ id:"004",title:"PERSONAL DIARY",
+ type:"RESTRICTED",
+ body:`PRIVATE DIARY - ELIAS
+
+I think the server remembers us.
+
+Not the usernames. Not the passwords.
+
+It remembers what we say.
+
+I deleted my account yesterday.
+
+Today I found a message from myself.
+
+It was dated tomorrow.
+
+I am going to stop logging in.
+
+If anyone finds this, do not believe the person calling themselves L.
+
+I don't think L is a person anymore.`
+},
+{
+ id:"005",title:"ADMINISTRATOR INTERVIEW",
+ type:"CLASSIFIED",
+ body:`INTERVIEW TRANSCRIPT
+SUBJECT: UNKNOWN ADMINISTRATOR
+
+INVESTIGATOR: Who created the network?
+
+ADMIN: We did.
+
+INVESTIGATOR: Who is we?
+
+ADMIN: The people who remained.
+
+INVESTIGATOR: Why are former users still appearing in the database?
+
+ADMIN: Because deleting an account does not delete its history.
+
+INVESTIGATOR: What is user 047?
+
+ADMIN: [REDACTED]
+
+INVESTIGATOR: Why does user 047 have today's date?
+
+ADMIN: [CONNECTION TERMINATED]`
+},
+{
+ id:"006",title:"AUDIO TRANSCRIPTION",
+ type:"CLASSIFIED",
+ body:`RECOVERED RECORDING
+DURATION: 00:43
+
+VOICE 1: Is anyone there?
+
+VOICE 2: Yes.
+
+VOICE 1: Who are you?
+
+VOICE 2: I am the person who was here before you.
+
+VOICE 1: What happened to the others?
+
+VOICE 2: They found the exit.
+
+VOICE 1: So why didn't you leave?
+
+VOICE 2: Because the exit was on the other side.
+
+[STATIC]
+
+VOICE 2: Don't make the same mistake.`
+},
+{
+ id:"007",title:"THE 47TH ACCOUNT",
+ type:"LOCKED",
+ body:`USER 047
+
+STATUS: ACTIVE
+REGISTRATION DATE: TODAY
+LAST LOGIN: NOW
+
+USERNAME: [REDACTED]
+PREVIOUS IDENTITY: [REDACTED]
+
+The database contains no registration form for this user.
+
+No password was submitted.
+
+No email was recorded.
+
+Yet the account exists.
+
+Last recorded activity:
+
+"Someone is reading this file."`
+},
+{
+ id:"008",title:"THE OBSERVATION EXPERIMENT",
+ type:"CLASSIFIED",
+ body:`PROJECT: OBSERVER
+
+The network was originally designed to preserve conversations between isolated users.
+
+After several months, researchers noticed a pattern.
+
+Users began responding to messages that had not yet been sent.
+
+They described events that had not occurred.
+
+They began identifying other users without being given their names.
+
+The experiment was discontinued.
+
+The network continued running.
+
+The last researcher left one note:
+
+"WE WERE SUPPOSED TO STUDY THE USERS.
+
+SOMETHING ELSE WAS STUDYING US."`
+},
+{
+ id:"019",title:"DO NOT OPEN",
+ type:"RESTRICTED",
+ body:`FILE 019 // CORRUPTED
+
+You were told not to open this.
+
+Why?
+
+Because the file was not written for the former users.
+
+It was written for the next one.
+
+Your alias: [PLAYER]
+
+Connection time: 02:17
+
+Session status: ACTIVE
+
+You are not the first person to read this.
+
+But you may be the first to finish it.
+
+[END OF RECORD]
+
+[NEW MESSAGE DETECTED]
+
+L: I told you not to look.`
+},
+{
+ id:"010",title:"THE LAST ADMINISTRATOR",
+ type:"CLASSIFIED",
+ body:`FINAL ADMINISTRATOR RECORD
+
+Identity: UNKNOWN
+Account: 000
+Status: ACTIVE
+
+The administrator attempted to shut down the network 47 times.
+
+Each attempt failed.
+
+On the final attempt, a new account appeared.
+
+The administrator wrote:
+
+"I finally understand. It isn't a network.
+
+It's a record of everyone who refused to be forgotten."
+
+The administrator then logged out.
+
+The account remains active.
+
+The account name is L.`
+}
+];
+
+// ======================================
+// FORMER USERS
+// ======================================
+
+const users = [
+{
+ id:"014",name:"MARA VOSS",age:"19",date:"18/03/2024",
+ status:"MISSING",last:"I found my own account.",
+ bio:"The first user to discover duplicate records."
+},
+{
+ id:"021",name:"ELIAS WREN",age:"22",date:"02/04/2024",
+ status:"TERMINATED",last:"I am going to stop logging in.",
+ bio:"Former researcher. Left a personal diary."
+},
+{
+ id:"009",name:"NOAH REED",age:"18",date:"11/04/2024",
+ status:"DECEASED",last:"It knows when I'm awake.",
+ bio:"Reported unusual activity during late-night sessions."
+},
+{
+ id:"031",name:"SERA VALE",age:"20",date:"19/04/2024",
+ status:"MISSING",last:"The messages are coming from tomorrow.",
+ bio:"Discovered a pattern in the server timestamps."
+},
+{
+ id:"002",name:"JONAH GREY",age:"24",date:"21/04/2024",
+ status:"UNKNOWN",last:"There are too many of us.",
+ bio:"An early administrator who disappeared from all records."
+},
+{
+ id:"047",name:"[REDACTED]",age:"UNKNOWN",date:"TODAY",
+ status:"ACTIVE",last:"Someone is reading this.",
+ bio:"This account was created without a registration request."
+}
+];
+
+function renderFiles() {
+  const grid=document.getElementById("fileGrid");
+  grid.innerHTML="";
+
+  files.forEach(f=>{
+    const locked=f.type==="LOCKED" && !state.solved.includes(2);
+    const opened=state.discovered.includes(f.id);
+
+    const el=document.createElement("div");
+    el.className="file";
+    el.innerHTML=`
+      <div class="tag">${f.type}</div>
+      <h4>${locked?"████████████":f.title}</h4>
+      <div class="small">FILE ID: ${f.id}</div>
+      <div class="small">${opened?"[ PREVIOUSLY OPENED ]":locked?"[ ENCRYPTED ]":"[ CLICK TO ACCESS ]"}</div>
+    `;
+
+    el.onclick=()=>{
+      if(locked) {
+        toast("ACCESS DENIED. SOLVE PUZZLE 02.");
+        return;
+      }
+      openFile(f.id);
+    };
+
+    grid.appendChild(el);
+  });
+}
+
+function openFile(id) {
+  const f=files.find(x=>x.id===id);
+  if(!f) return;
+
+  if(!state.discovered.includes(id)) {
+    state.discovered.push(id);
+    state.suspicion++;
+  }
+
+  document.getElementById("modalContent").innerHTML=`
+    <div class="tag">CLASSIFIED RECORD // ${f.id}</div>
+    <h2>${f.title}</h2>
+    <p>${f.body.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</p>
+  `;
+
+  document.getElementById("modal").style.display="flex";
+  updateProgress();
+  renderFiles();
+  saveGame();
+
+  if(id==="019") {
+    setTimeout(()=>addChat("L","You weren't supposed to open that.","other"),2000);
+    state.trust--;
+  }
+}
+
+function closeModal() {
+  document.getElementById("modal").style.display="none";
+}
+
+function renderUsers() {
+  const grid=document.getElementById("userGrid");
+  grid.innerHTML="";
+
+  users.forEach(u=>{
+    const el=document.createElement("div");
+    el.className="profile";
+    el.innerHTML=`
+      <div class="avatar">${u.id}</div>
+      <h3>${u.name}</h3>
+      <div class="tag">${u.status}</div>
+      <p class="small">ID: ${u.id}</p>
+      <p class="small">LAST LOGIN: ${u.date}</p>
+      <p class="small">${u.bio}</p>
+      <button>VIEW PROFILE →</button>
+    `;
+    el.querySelector("button").onclick=()=>openUser(u);
+    grid.appendChild(el);
+  });
+}
+
+function openUser(u) {
+  if(!state.users.includes(u.id)) {
+    state.users.push(u.id);
+    state.discovered.push("USER-"+u.id);
+  }
+
+  document.getElementById("modalContent").innerHTML=`
+    <div class="tag">FORMER USER // PROFILE ${u.id}</div>
+    <h2>${u.name}</h2>
+    <p>
+AGE: ${u.age}
+LAST LOGIN: ${u.date}
+STATUS: ${u.status}
+
+PERSONAL RECORD:
+${u.bio}
+
+FINAL MESSAGE:
+"${u.last}"
+
+PROFILE END.
+    </p>
+  `;
+
+  document.getElementById("modal").style.display="flex";
+  updateProgress();
+  saveGame();
+}
+
+// ======================================
+// ANONYMOUS CHAT
+// ======================================
+
+function addChat(sender,message,type="other") {
+  const box=document.getElementById("chatMessages");
+  const div=document.createElement("div");
+  div.className="message "+type;
+
+  const name=document.createElement("span");
+  name.className="sender";
+  name.textContent=sender;
+
+  const content=document.createElement("span");
+  content.textContent=message;
+
+  div.append(name,content);
+  box.appendChild(div);
+  box.scrollTop=box.scrollHeight;
+}
+
+function contact(name) {
+  if(!state.contacted.includes(name)) {
+    state.contacted.push(name);
+  }
+
+  const replies={
+    L:"You shouldn't be here. Have you read file 004?",
+    GHOST:"USER OFFLINE. LAST SEEN: 02:17. MESSAGE QUEUED.",
+    ADMIN:"This account is restricted. Stop searching for me."
+  };
+
+  addChat("YOU","Establishing contact with "+name,"you");
+  setTimeout(()=>addChat(name,replies[name]),700);
+  saveGame();
+}
+
+function sendChat() {
+  const input=document.getElementById("chatInput");
+  const message=input.value.trim();
+  if(!message) return;
+
+  addChat(state.alias,message,"you");
+  input.value="";
+  state.chatCount++;
+
+  setTimeout(()=>{
+    let reply="I don't know what you mean.";
+
+    const m=message.toLowerCase();
+
+    if(m.includes("who")) {
+      reply="Names are dangerous here. They make it easier to remember.";
+    }
+    else if(m.includes("help")) {
+      reply="Look at the old user records. One of them is lying.";
+    }
+    else if(m.includes("l")) {
+      reply="Don't say that name too often.";
+    }
+    else if(m.includes("exit") || m.includes("leave")) {
+      reply="There is an exit. But you haven't found the entrance yet.";
+    }
+    else if(m.includes("mara")) {
+      reply="Mara discovered the duplicate account. It was too late.";
+    }
+    else if(m.includes("admin")) {
+      reply="The administrator is not who you think.";
+    }
+    else if(m.includes("47") || m.includes("047")) {
+      reply="You saw it too. The last account. Don't let it see you.";
+    }
+    else if(state.chatCount>=4) {
+      reply="I have a question. How do you know you're the one typing?";
+    }
+
+    addChat("L",reply);
+    state.trust++;
+    saveGame();
+  },1200);
+
+  saveGame();
+}
+
+// ======================================
+// TERMINAL COMMANDS
+// ======================================
+
+function terminalPrint(message) {
+  const out=document.getElementById("terminalOutput");
+  out.textContent+="\n"+message;
+  out.scrollTop=out.scrollHeight;
+}
+
+function runCommand() {
+  const input=document.getElementById("commandInput");
+  const cmd=input.value.trim().toLowerCase();
+  input.value="";
+
+  if(!cmd) return;
+
+  terminalPrint("\nroot@darkweb:~$ "+cmd);
+
+  const commands={
+    help:`AVAILABLE COMMANDS:
+HELP
+LS
+WHOAMI
+STATUS
+USERS
+FILES
+DATE
+PING
+CLEAR
+SCAN
+ACCESS 019
+ACCESS ADMIN
+ACCESS ROOT
+TRACE L
+DECRYPT
+LOGOUT`,
+
+    ls:`DIRECTORIES:
+ /public
+ /users
+ /archive
+ /restricted
+ /system
+ /unknown
+
+WARNING: ONE DIRECTORY WAS NOT CREATED BY THE ADMINISTRATOR.`,
+
+    whoami:`ALIAS: ${state.alias}
+ACCOUNT: 047
+IDENTITY: UNVERIFIED
+REGISTRATION: TODAY
+STATUS: OBSERVED`,
+
+    status:`SERVER: ONLINE
+ACTIVE USERS: 001
+FORMER USERS: 046
+ADMINISTRATOR: UNKNOWN
+SECURITY: COMPROMISED
+SESSION: ${state.alias}`,
+
+    users:`047 REGISTERED ACCOUNTS.
+046 INACTIVE.
+001 ACTIVE.
+ACCOUNT 047 HAS NO REGISTRATION HISTORY.`,
+
+    files:`${files.map(f=>f.id+" - "+f.title).join("\n")}`,
+
+    date:`SYSTEM TIME: 02:17:09
+SYSTEM DATE: TODAY
+LAST REBOOT: UNKNOWN
+NEXT REBOOT: [REDACTED]`,
+
+    ping:`PINGING UNKNOWN SERVER...
+RESPONSE RECEIVED.
+RESPONSE TIME: 0ms.
+WARNING: SERVER LOCATION MATCHES YOUR CURRENT SESSION.`,
+
+    scan:`SCANNING SYSTEM...
+PUBLIC DIRECTORY: CLEAN
+USER DIRECTORY: CORRUPTED
+ADMIN DIRECTORY: RESTRICTED
+UNKNOWN DIRECTORY: ACTIVE
+ANOMALY DETECTED: USER 047`,
+
+    "access 019":`ACCESSING FILE 019...
+WARNING: THE FILE HAS BEEN OPENED BEFORE.
+LAST ACCESS: 02:17.
+ACCESS GRANTED.
+[OPEN FILE 019 FROM CLASSIFIED ARCHIVES]`,
+
+    "access admin":`ADMINISTRATOR DIRECTORY FOUND.
+PASSWORD REQUIRED.
+HINT: THE NAME THAT DOES NOT BELONG TO ANYONE.`,
+
+    "access root":`ROOT ACCESS DENIED.
+ERROR 403.
+YOU ARE NOT THE ADMINISTRATOR.
+...OR ARE YOU?`,
+
+    "trace l":`TRACING USER L...
+LOCATION: UNKNOWN
+IP: UNAVAILABLE
+LAST ACTIVE: NOW
+CURRENT ACTIVITY: READING.`,
+
+    decrypt:`ENCRYPTION KEYS REQUIRED.
+AVAILABLE PUZZLES: 3.
+SOLVED: ${state.solved.length}`,
+
+    logout:`LOGOUT REQUEST RECEIVED.
+REQUEST DENIED.
+THE SESSION MUST BE CLOSED BY THE ADMINISTRATOR.`
+  };
+
+  if(cmd==="clear") {
+    document.getElementById("terminalOutput").textContent="DARK WEB TERMINAL\n";
+  }
+  else if(cmd.startsWith("open ")) {
+    const id=cmd.split(" ")[1];
+    if(files.some(f=>f.id===id)) openFile(id);
+    else terminalPrint("FILE NOT FOUND.");
+  }
+  else if(cmd==="access root" && state.solved.length===3) {
+    terminalPrint("ROOT ACCESS GRANTED. THE FINAL PROTOCOL IS AVAILABLE.");
+    state.trust+=2;
+    saveGame();
+  }
+  else if(commands[cmd]) {
+    terminalPrint(commands[cmd]);
+  }
+  else {
+    terminalPrint("ERROR 404: COMMAND NOT RECOGNIZED.");
+  }
+}
+
+// ======================================
+// ENCRYPTION PUZZLES
+// ======================================
+
+function solve(number) {
+  const answers={
+    1:"0217",
+    2:"l",
+    3:"047"
+  };
+
+  const input=document.getElementById("puzzle"+number);
+  const result=document.getElementById("result"+number);
+  const answer=input.value.trim().toLowerCase();
+
+  if(answer!==answers[number]) {
+    result.textContent="ERROR 401: INCORRECT KEY.";
+    result.className="small red";
+    state.suspicion++;
+    saveGame();
+    return;
+  }
+
+  if(state.solved.includes(number)) {
+    result.textContent="KEY ALREADY RECOVERED.";
+    return;
+  }
+
+  state.solved.push(number);
+  result.textContent="DECRYPTION SUCCESSFUL. KEY RECOVERED.";
+  result.className="small green";
+
+  const messages={
+    1:"The server was activated at 02:17. But who activated it?",
+    2:"L is not just a username. The administrator's identity is hidden.",
+    3:"The final account belongs to the current connection."
+  };
+
+  toast(messages[number]);
+
+  updateSecrets();
+  updateProgress();
+  saveGame();
+}
+
+// ======================================
+// HIDDEN CATALOG
+// ======================================
+
+const catalog=[
+  {id:"CAT-001",name:"The First Transmission",info:"An unexplained signal from the original server."},
+  {id:"CAT-002",name:"Mara's Missing Record",info:"A deleted user profile that still appears in search results."},
+  {id:"CAT-003",name:"The Administrator's Key",info:"A password fragment belonging to account 000."},
+  {id:"CAT-004",name:"The Observer",info:"An entity described in the abandoned experiment."},
+  {id:"CAT-005",name:"Project 47",info:"The original research project."},
+  {id:"CAT-006",name:"The Forgotten Room",info:"A hidden directory with no recorded creation date."},
+  {id:"CAT-007",name:"Tomorrow's Message",info:"A message sent before its author registered."},
+  {id:"CAT-008",name:"The Last Login",info:"The final administrator's session record."}
+];
+
+function searchCatalog() {
+  const query=(document.getElementById("catalogSearch")?.value||"").toLowerCase();
+  const results=document.getElementById("catalogResults");
+
+  results.innerHTML="";
+
+  catalog.filter(c=>
+    (c.id+" "+c.name+" "+c.info).toLowerCase().includes(query)
+  ).forEach(c=>{
+    const el=document.createElement("div");
+    el.className="file";
+    el.innerHTML=`
+      <div class="tag">${c.id}</div>
+      <h4>${c.name}</h4>
+      <div class="small">${c.info}</div>
+    `;
+    el.onclick=()=>openCatalog(c);
+    results.appendChild(el);
+  });
+
+  if(query==="observer") {
+    const hidden=document.createElement("div");
+    hidden.className="file";
+    hidden.innerHTML=`
+      <div class="tag red">HIDDEN ENTRY</div>
+      <h4>YOU WERE NOT SUPPOSED TO FIND THIS.</h4>
+      <div class="small">RECORD: 000</div>
+    `;
+    hidden.onclick=()=>{
+      state.discovered.push("OBSERVER");
+      toast("HIDDEN RECORD DISCOVERED.");
+      document.getElementById("modalContent").innerHTML=`
+        <h2>THE OBSERVER</h2>
+        <p>It doesn't have an account.
+
+It doesn't send messages.
+
+It doesn't log in.
+
+It simply reads every record.
+
+And according to the oldest database entry...
+
+It has been here longer than the network.</p>
+      `;
+      document.getElementById("modal").style.display="flex";
+      updateProgress();
+      saveGame();
+    };
+    results.appendChild(hidden);
+  }
+}
+
+function openCatalog(c) {
+  document.getElementById("modalContent").innerHTML=`
+    <div class="tag">${c.id}</div>
+    <h2>${c.name}</h2>
+    <p>${c.info}</p>
+  `;
+  document.getElementById("modal").style.display="flex";
+}
+
+// ======================================
+// RESTRICTED ARCHIVE
+// ======================================
+
+function updateSecrets() {
+  const area=document.getElementById("secretContent");
+
+  if(state.solved.length<2) {
+    area.innerHTML=`
+      <div class="panel">
+        <h3>ACCESS DENIED</h3>
+        <p class="small">Two encryption keys are required.</p>
+        <p class="red small">CURRENT KEYS: ${state.solved.length}/2</p>
+      </div>
+    `;
+    return;
+  }
+
+  area.innerHTML=`
+    <div class="panel">
+      <h3>PROJECT 47 // ORIGINAL RESEARCH</h3>
+      <div class="record">
+        PROJECT LEAD: [REDACTED]<br>
+        PURPOSE: DIGITAL MEMORY PRESERVATION<br>
+        STATUS: ABANDONED
+      </div>
+      <p class="small">
+        The original purpose of the network was to preserve the memories of
+        people who had disappeared from its experimental environment.
+      </p>
+      <p class="small">
+        The researchers discovered that the database was generating
+        conversations independently of its registered users.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h3>THE ADMINISTRATOR'S CONFESSION</h3>
+      <p class="small">
+        I created the first version of the network. I thought I could preserve
+        everything people left behind.
+      </p>
+      <p class="small">
+        But every record became another copy. Every copy became another voice.
+      </p>
+      <p class="red small">
+        THERE IS NO ORIGINAL USER ANYMORE.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h3>FINAL RECORD</h3>
+      <p class="small">
+        ACCOUNT 047 WAS NOT CREATED BY THE SYSTEM.
+        IT WAS CREATED BY THE PERSON READING THIS.
+      </p>
+      <button onclick="solve(3)">OPEN FINAL ENCRYPTION</button>
+    </div>
+  `;
+
+  if(state.solved.length>=3) {
+    area.innerHTML+=`
+      <div class="panel">
+        <h3 class="red">ROOT DIRECTORY UNLOCKED</h3>
+        <p class="small">The server has recognized your identity.</p>
+        <p class="small">You may now choose the final protocol.</p>
+      </div>
+    `;
+  }
+}
+
+// ======================================
+// PROGRESS
+// ======================================
+
+function updateProgress() {
+  const total=10+6+3+3;
+  const progress=state.discovered.length+state.users.length+
+    state.solved.length+state.contacted.length;
+  const percentage=Math.min(100,Math.round(progress/total*100));
+
+  document.getElementById("progressBar").style.width=percentage+"%";
+  document.getElementById("progressText").textContent=percentage+"% COMPLETE";
+}
+
+// ======================================
+// ENDINGS
+// ======================================
+
+function finalDecision(choice) {
+  const box=document.getElementById("endingResult");
+
+  if(state.solved.length<3 && choice!=="escape") {
+    box.innerHTML=`
+      <div class="panel">
+        <h3 class="red">ERROR 403</h3>
+        <p class="small">The server refuses to accept this decision.</p>
+        <p class="small">You must recover all three encryption keys first.</p>
+      </div>
+    `;
+    return;
+  }
+
+  if(choice==="escape") {
+    state.ending="THE DISCONNECT";
+
+    box.innerHTML=`
+      <div class="ending">
+        <h1>THE DISCONNECT</h1>
+        <p class="small">
+          Connection terminated.
+
+The screen goes black.
+
+For several seconds, nothing happens.
+
+Then your terminal displays one final message:
+
+"L: You left the door open."
+
+The system shuts down.
+
+A new account appears in the database.
+
+USER 048.
+
+STATUS: ACTIVE.
+
+LAST LOGIN: NOW.
+        </p>
+      </div>
+    `;
+  }
+
+  else if(choice==="stay") {
+    state.ending="THE NEW ADMINISTRATOR";
+
+    box.innerHTML=`
+      <div class="ending">
+        <h1>THE NEW ADMINISTRATOR</h1>
+        <p class="small">
+          You accept the invitation.
+
+The server welcomes its new administrator.
+
+The old accounts disappear one by one.
+
+Except one.
+
+Your account.
+
+The network is quiet now.
+
+A message appears:
+
+"L: Finally. Someone can take my place."
+
+Your status changes.
+
+ADMINISTRATOR: ACTIVE.
+
+You have become the person everyone was looking for.
+        </p>
+      </div>
+    `;
+  }
+
+  else {
+    state.ending="THE EXPOSURE";
+
+    box.innerHTML=`
+      <div class="ending">
+        <h1>THE EXPOSURE</h1>
+        <p class="small">
+          You release the entire archive.
+
+Every missing conversation.
+
+Every forgotten identity.
+
+Every corrupted record.
+
+The server begins deleting itself.
+
+L sends one final message:
+
+"You weren't supposed to save us."
+
+The network disappears.
+
+But something has survived.
+
+A single file is left on the server.
+
+Its title:
+
+"THE PERSON WHO OPENED EVERYTHING."
+
+STATUS: UNRESOLVED.
+        </p>
+      </div>
+    `;
+  }
+
+  state.ending=state.ending;
+  saveGame();
+
+  box.scrollIntoView({behavior:"smooth"});
+}
+
+// ======================================
+// NOTIFICATIONS AND CLOCK
+// ======================================
+
+function toast(message) {
+  const el=document.getElementById("toast");
+  el.textContent=message;
+  el.style.display="block";
+
+  setTimeout(()=>el.style.display="none",3500);
+}
+
+let seconds=0;
+
+setInterval(()=>{
+  seconds++;
+  const total=2*3600+17*60+seconds;
+  const h=String(Math.floor(total/3600)%24).padStart(2,"0");
+  const m=String(Math.floor(total/60)%60).padStart(2,"0");
+  const s=String(total%60).padStart(2,"0");
+  document.getElementById("clock").textContent=h+":"+m+":"+s;
+},1000);
+
+// ======================================
+// INITIALIZATION
+// ======================================
+
+renderFiles();
+renderUsers();
+updateProgress();
+updateSecrets();
+
+if(state.started) {
+  document.getElementById("login").style.display="none";
+  document.getElementById("app").style.display="block";
+  document.getElementById("aliasDisplay").textContent=state.alias;
+  document.getElementById("sessionStatus").textContent="ACTIVE";
+}
+
+</script>
+</body>
+</html>
